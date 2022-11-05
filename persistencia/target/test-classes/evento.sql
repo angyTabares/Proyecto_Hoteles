@@ -1,0 +1,3 @@
+insert into evento(codigo,descripcion,fecha,nombre,evento_lugar_codigo,hora) values(1,"evento para la familia","2021-06-10","cena familia",1,"19:10:00");
+insert into evento(codigo,descripcion,fecha,nombre,evento_lugar_codigo,hora) values(2,"una tarde de cafe","2021-04-11","cafe para todos",3,"19:10:00");
+insert into evento(codigo,descripcion,fecha,nombre,evento_lugar_codigo,hora) values(3,"fiesta neon","2021-04-12","neon party",2,"19:10:00");

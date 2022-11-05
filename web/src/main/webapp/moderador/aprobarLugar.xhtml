@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xml:lang="en" lang="en">
+<ui:composition template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="detalleLugar.css"/>
+        <h:outputStylesheet library="css" name="mapbox-gl.css"/>
+        <h:outputScript library="js" name="mapbox-gl.js"/>
+        <h:outputScript library="js" name="script_detalle.js"/>
+    </ui:define>
+
+    <ui:define name="titulo">Unilocal | Aprobacion</ui:define>
+
+    <ui:define name="contenido">
+
+        <div class="container ">
+            <div class="row detalleNombre ">
+                <h1 class="fs-1"><strong>#{aprobarLugarBean.lugar.nombre}</strong></h1>
+                <p>#{aprobarLugarBean.lugar.tipo.nombre}</p>
+            </div>
+            <div class=" row detalleGaleria">
+
+                <div class="col">
+                    <p:galleria styleClass="col w-100" value="#{aprobarLugarBean.lugar.imagenes}" var="image"
+                                showCaption="false">
+                        <p:graphicImage styleClass="w-100 h-100" url="/uploads/#{image}"
+                                        alt="Image Description for #{image}"
+                                        title="#{image}"/>
+                    </p:galleria>
+                </div>
+
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            Información
+                        </div>
+
+                        <div class="card-body">
+                            <div>
+
+
+                            </div>
+                            <div class="mt-4">
+                                <label class="fs-5"> Descripcion</label>
+                                <p class="ms-2">#{aprobarLugarBean.lugar.descripcion}.</p>
+                            </div>
+                            <div class="mt-4">
+                                <label class="fs-5"> Horarios</label>
+                                <div class="row">
+                                    <p class="col ms-2 fw-bold"> Dia </p>
+                                    <p class="col ms-2 fw-bold">Abre </p>
+                                    <p class="col ms-2 fw-bold">Cierra</p>
+                                </div>
+                                <div class="row">
+
+                                    <p:repeat value="#{aprobarLugarBean.lugar.horarios}" var="horario">
+                                        <div class="row">
+
+                                            <p class=" col ms-2">#{horario.dia} </p>
+                                            <p class="col ms-2"> #{horario.horaApertura} </p>
+                                            <p class="col ms-2">#{horario.horaCierre}</p>
+                                        </div>
+                                    </p:repeat>
+                                </div>
+
+                            </div>
+
+                            <div class="mt-4">
+                                <label class="fs-5"> Telefonos</label>
+                                <p:repeat value="#{aprobarLugarBean.lugar.telefonos}" var="telefono">
+                                    <p class="ms-2">#{telefono}</p>
+                                </p:repeat>
+                            </div>
+                            <br/>
+
+                            <h:form>
+                                <p:commandButton value="Aprobar" styleClass="ui-button-success"
+                                                 action="#{aprobarLugarBean.aprobarLugar}"/>
+                                <p:commandButton id="denegar" value="Denegar" styleClass="ui-button-danger m-lg-2"
+                                                 action="#{aprobarLugarBean.denegarLugar}"/>
+                            </h:form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br></br>
+
+        </div>
+
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+    </ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xml:lang="en" lang="en">
+
+<ui:composition template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+
+        <h:outputStylesheet library="css" name="formularioRegistro.css"/>
+        <h:outputStylesheet library="css" name="style.css"/>
+        <h:outputStylesheet library="css" name="admin.css"/>
+    </ui:define>
+    <ui:define name="titulo">Unilocal | Administrador</ui:define>
+    <ui:define name="contenido">
+
+        <div class="card">
+            <p:tabView id="tabs" dynamic="true" cache="true">
+                <p:tab title="Panel Moderadores">
+
+                    <div class="card">
+                        <h:form id="form">
+                            <p:growl id="moderadorMessages" showDetail="true"/>
+                            <p:toolbar>
+                                <p:toolbarGroup>
+                                    <p:commandButton value="Nuevo Moderador" icon="pi pi-plus"
+                                                     actionListener="#{administradorBean.nuevoModerador}"
+                                                     styleClass="ui-button-success" style="margin-right: .5rem"
+                                                     update="tabs:form:manage-moderador-content"
+                                                     oncomplete="PF('manageModeradorDialog').show()">
+                                        <p:resetInput target="tabs:form:manage-moderador-content"/>
+                                    </p:commandButton>
+
+                                </p:toolbarGroup>
+                            </p:toolbar>
+                            <p:dataTable id="dt-moderadores" widgetVar="dtModeradores" var="moderador"
+                                         value="#{administradorBean.listaModeradores}"
+                                         reflow="true" styleClass="products-table"
+                                         selection="#{administradorBean.moderador}"
+                                         paginator="true"
+                                         rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                                <f:facet name="header">
+                                    <div class="products-table-header">
+                                        <span style="font-weight: bold">Moderadores</span>
+
+
+                                    </div>
+                                </f:facet>
+
+                                <p:column headerText="Id" sortBy="#{moderador.id}" filterBy="#{moderador.id}">
+                                    <h:outputText value="#{moderador.id}"/>
+                                </p:column>
+                                <p:column headerText="Nombre" sortBy="#{moderador.nombre}"
+                                          filterBy="#{moderador.nombre}">
+                                    <h:outputText value="#{moderador.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Nickname" sortBy="#{moderador.nickname}"
+                                          filterBy="#{moderador.nickname}">
+                                    <h:outputText value="#{moderador.nickname}"/>
+                                </p:column>
+                                <p:column headerText="Email" sortBy="#{moderador.email}"
+                                          filterBy="#{moderador.email}">
+                                    <h:outputText value="#{moderador.email}"/>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton icon="pi pi-pencil"
+                                                     styleClass="edit-button rounded-button ui-button-success"
+                                                     update="tabs:form:manage-moderador-content"
+                                                     oncomplete="PF('manageModeradorDialog').show()"
+                                                     process="@this"
+                                                     action="#{administradorBean.cambiarEditar}">
+                                        <f:setPropertyActionListener value="#{moderador}"
+                                                                     target="#{administradorBean.moderador}"/>
+                                        <p:resetInput target="tabs:form:manage-moderador-content"/>
+                                    </p:commandButton>
+                                    <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                                     update="tabs:form:dt-moderadores"
+                                                     process="@this"
+                                                     action="#{administradorBean.eliminarModerador}">
+                                        <f:setPropertyActionListener value="#{moderador}"
+                                                                     target="#{administradorBean.moderador}"/>
+                                    </p:commandButton>
+                                </p:column>
+
+                            </p:dataTable>
+
+                            <p:dialog header="Detalles Moderador" showEffect="fade" modal="true"
+                                      widgetVar="manageModeradorDialog" responsive="true">
+                                <p:outputPanel id="manage-moderador-content" class="ui-fluid">
+                                    <p:outputPanel rendered="#{not empty administradorBean.moderador}">
+
+                                        <p:outputLabel styleClass="fw-bold" for="nombre_usuario" value="Nombre: "/>
+                                        <p:inputText styleClass="w-100 mb-0" id="nombre_usuario"
+                                                     value="#{administradorBean.moderador.nombre}"
+                                                     required="true"
+                                                     requiredMessage="El nombre es obligatorio"/>
+
+                                        <p:message for="nombre_usuario"
+                                                   style="width: 100% ; margin: 0; border: none;background: none"/>
+
+                                        <p:outputLabel styleClass="fw-bold" for="nickname_usuario"
+                                                       value="Nickname: "/>
+                                        <p:inputText styleClass="w-100" id="nickname_usuario"
+                                                     value="#{administradorBean.moderador.nickname}"
+                                                     required="true"
+                                                     requiredMessage="El nickname es obligatorio"/>
+                                        <p:message for="nickname_usuario"
+                                                   style="width: 100%; margin: 0;border: none;background: none"/>
+
+                                        <p:outputLabel styleClass="fw-bold" for="email_usuario" value="Email: "/>
+                                        <p:inputText styleClass="w-100" id="email_usuario"
+                                                     value="#{administradorBean.moderador.email}"
+                                                     required="true"
+                                                     requiredMessage="El email es obligatorio"/>
+                                        <p:message for="email_usuario"
+                                                   style="width: 100%; margin:0;border: none;background: none"/>
+
+                                        <p:outputLabel styleClass="fw-bold" for="password_usuario"
+                                                       value="Contraseña: "/>
+                                        <p:inputText style="width: 100%" id="password_usuario"
+                                                     value="#{administradorBean.moderador.password}"
+                                                     required="true"
+                                                     requiredMessage="La contraseña es obligatoria"/>
+                                        <p:message for="password_usuario"
+                                                   style="width: 100%; margin:0;border: none;background: none"/>
+
+                                    </p:outputPanel>
+                                </p:outputPanel>
+                                <f:facet name="footer">
+
+                                    <p:commandButton id="saveDialg" value="Save" icon="pi pi-check"
+                                                     actionListener="#{administradorBean.crearModerador}"
+                                                     update="tabs:form:manage-moderador-content, tabs:form:dt-moderadores"
+                                                     process="tabs:form:manage-moderador-content @this"/>
+
+                                    <p:commandButton value="Cancel" icon="pi pi-times"
+                                                     onclick="PF('manageModeradorDialog').hide()"
+                                                     class="ui-button-secondary"/>
+                                </f:facet>
+                            </p:dialog>
+
+                        </h:form>
+
+                    </div>
+
+                </p:tab>
+                <p:tab title="Reportes">
+                    <div class="reportes row">
+                        <div class="col-6 p-3 reportContainer">
+                            <div>
+                                <h2>Cantidad de lugares por categoria</h2>
+                            </div>
+                            <div>
+                                <p:pieChart model="#{administradorBean.pieModel}" style="width: 100%; height: 500px;"/>
+                            </div>
+                        </div>
+                        <div class="col-6 p-3 reportContainer">
+                            <h:form id="ciudadesCal">
+                                <div>
+                                    <h2>Promedio de calificaciones de los lugares de una Ciudad</h2>
+                                </div>
+
+                                <p:outputLabel styleClass="fw-bold" for="ciudad_usuario" value="Ciudad: "/>
+                                <p:selectOneMenu styleClass="w-100" id="ciudad_usuario"
+                                                 value="#{administradorBean.ciudadChart}"
+                                                 required="true"
+                                                 requiredMessage="La ciudad es obligatoria"
+                                                 converter="#{ciudadConverter}"
+                                                 filter="true"
+                                                 filterMatchMode="startsWith"
+                                >
+                                    <f:selectItem itemLabel="Seleccione una Ciudad" noSelectionOption="true"/>
+                                    <f:selectItems var="ciudad" itemLabel="#{ciudad.nombre}"
+                                                   value="#{administradorBean.ciudades}"/>
+                                    <p:ajax event="itemSelect"
+                                            listener="#{administradorBean.cambiarGraficaCalificacion}"
+                                            update="tabs:ciudadesCal:graficaPromCal"/>
+                                </p:selectOneMenu>
+
+                                <p:message for="ciudad_usuario"
+                                           style="width: 100%; margin: 0;border: none;background: none"/>
+                                <p:barChart id="graficaPromCal" model="#{administradorBean.hbarModel}"
+                                            style="width: 100%; height: 500px;"/>
+                            </h:form>
+
+
+                        </div>
+                        <div class="col mt-5 reportContainer p-5">
+                            <h:form id="lugaresCiudades">
+                                <div>
+                                    <h2>Cantidad de lugares no aprobados por cada Ciudad</h2>
+                                </div>
+                                <p:barChart id="graficaCantLug" model="#{administradorBean.barModel}"
+                                            style="width: 100%; height: 500px;"/>
+                            </h:form>
+                        </div>
+                    </div>
+                </p:tab>
+
+            </p:tabView>
+        </div>
+
+    </ui:define>
+</ui:composition>
+
+</html>

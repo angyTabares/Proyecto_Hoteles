@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xml:lang="en" lang="en">
+<ui:composition template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="busqueda.css"/>
+        <h:outputStylesheet library="css" name="mapbox-gl.css"/>
+        <h:outputStylesheet library="css" name="mapbox-gl-directions.css"/>
+        <h:outputStylesheet library="css" name="home.css"/>
+        <h:outputScript library="js" name="mapbox-gl.js"/>
+
+        <h:outputScript library="js" name="mapbox-gl-directions.js"/>
+        <h:outputScript library="js" name="turf.min.js"/>
+        <h:outputScript library="js" name="script_home.js"/>
+
+        <script src="./resources/js/animations.js"></script>
+
+        <div id="map"></div>
+    </ui:define>
+    <ui:define name="titulo">Unilocal | Home</ui:define>
+
+    <ui:define name="contenido">
+        <div class="position-relative h-100">
+            <div class="mapContainer h-100 position-relative">
+                <div id="mapaHome" class="mapaHome"></div>
+                <div id="lateralPanel" class="lateralPanel position-absolute top-0">
+                    <h:form styleClass="d-flex me-2 p-4 "
+                            rendered="#{!seguridadBean.autenticado or ( seguridadBean.autenticado and seguridadBean.rol=='usuario')}">
+
+                        <p:inputText styleClass="input-search" placeholder="¿Qué está buscando?"
+                                     value="#{busquedaBean.busqueda}"/>
+                        <p:commandButton styleClass="btnSearch" icon="pi pi-search"
+                                         action="#{busquedaBean.buscar}"/>
+
+
+                    </h:form>
+
+                    <h:form>
+
+                        <p:dataScroller styleClass="listaLugares" value="#{inicioBean.lugaresAprobados}" var="lugar"
+                                        chunkSize="10"
+                                        mode="inline"
+
+                        >
+                            <div class="card mb-3" style="max-width: 540px;">
+                                <div class="row g-0">
+                                    <div class="col-md-4 border ">
+                                        <img src="/uploads/#{lugar.imagenPrincipal}"
+                                             class="img-fluid rounded-start w-100 h-100"
+                                             alt="..."></img>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">#{lugar.nombre}</h5>
+                                            <p class="card-text"><small
+                                                    class="text-muted">#{lugar.tipo.nombre}</small></p>
+                                            <h:outputText
+                                                    styleClass="status-#{busquedaBean.cadenaEstaAbierto(lugar).toLowerCase()}"
+                                                    value="#{busquedaBean.cadenaEstaAbierto(lugar)}"/>
+                                            <p class="card-text">#{lugar.descripcion}</p>
+                                            <p class="card-text"><small
+                                                    class="text-muted"></small></p>
+                                            <p:commandButton value="Ver detalle"
+                                                             action="#{inicioBean.irADetalle(lugar.codigo)}"
+                                                             styleClass="ui-button-raised btnVerDetalle"
+                                                             icon="pi pi-arrow-right"
+                                                             iconPos="right"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </p:dataScroller>
+
+                    </h:form>
+                </div>
+                <button id="btnLateralPanel" class="btn btn-warning position-absolute btnLateralPanel"
+                        jsf:rendered="#{!seguridadBean.autenticado or ( seguridadBean.autenticado and seguridadBean.rol=='usuario')}">
+                    <i id="iconBtnLateralPanel" class="pi pi-caret-right"></i>
+                </button>
+
+
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
+
+</html>

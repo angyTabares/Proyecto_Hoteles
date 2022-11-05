@@ -1,0 +1,15 @@
+body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.btnComoLlegar {
+    background: var(--naranjado);
+    font-size: .9rem;
+    font-weight: bolder;
+}
+
+.nombreLugar {
+    font-size: 2rem;
+}
+

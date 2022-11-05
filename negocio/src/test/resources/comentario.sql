@@ -1,0 +1,4 @@
+insert into comentario(id,calificacion,comentario,fecha,respuesta,lugar_comentario_codigo,usuario_comentario_id) values(1,4,"Buena Comida","2021-04-10",NULL ,1,1);
+insert into comentario(id,calificacion,comentario,fecha,respuesta,lugar_comentario_codigo,usuario_comentario_id) values(2,3,"Buena Musica","2021-05-11","Muchas Gracias",2,2);
+insert into comentario(id,calificacion,comentario,fecha,respuesta,lugar_comentario_codigo,usuario_comentario_id) values(3,5,"Buen Cafe","2021-06-30","Muchas Gracias por el comentario",3,3);
+insert into comentario(id,calificacion,comentario,fecha,respuesta,lugar_comentario_codigo,usuario_comentario_id) values(4,4,"Buena Comida Buen servicio","2021-04-10",NULL ,1,2);

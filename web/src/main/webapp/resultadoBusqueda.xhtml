@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xml:lang="en" lang="en">
+
+<ui:composition template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="mapbox-gl.css"/>
+        <h:outputStylesheet library="css" name="busqueda.css"/>
+        <h:outputScript library="js" name="mapbox-gl.js"/>
+        <h:outputScript library="js" name="script_home.js"/>
+        <h:outputScript library="js" name="mapbox-gl-directions.js"/>
+        <h:outputStylesheet library="css" name="mapbox-gl-directions.css"/>
+    </ui:define>
+
+    <ui:define name="titulo">Unilocal | Resultado Busqueda</ui:define>
+
+    <ui:define name="contenido">
+        <div class="mapBusquedaContainer">
+            <div id="mapaHome" class="mapaHome"></div>
+        </div>
+
+        <h:form>
+            <p:dataTable id="dt-lugares" widgetVar="dtLugares" var="lugar" value="#{busquedaBean.lugares}"
+                         reflow="true" styleClass="products-table"
+                         selection="#{busquedaBean.lugar}" paginator="true"
+                         rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                <f:facet name="header">
+                    <div class="products-table-header">
+                        <span style="font-weight: bold">Resultados de busqueda</span>
+
+                        <span class="filter-container ui-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PF('dtLugares').filter()" placeholder="Search"/>
+                    </span>
+                    </div>
+                </f:facet>
+
+                <p:column headerText="Nombre" sortBy="#{lugar.nombre}" filterBy="#{lugar.nombre}">
+                    <h:outputText value="#{lugar.nombre}"/>
+                </p:column>
+
+                <p:column headerText="Descripcion" sortBy="#{lugar.descripcion}" filterBy="#{lugar.descripcion}">
+                    <h:outputText value="#{lugar.descripcion}"/>
+                </p:column>
+
+                <p:column headerText="Telefonos">
+                    <p:repeat value="#{lugar.telefonos}" var="telefono">
+                        <h:outputText value="#{telefono}"/>
+                        <br></br>
+                    </p:repeat>
+
+                </p:column>
+                <p:column headerText="Tipo" sortBy="#{lugar.tipo.nombre}" filterBy="#{lugar.tipo.nombre}">
+                    <h:outputText value="#{lugar.tipo.nombre}"/>
+                </p:column>
+
+                <p:column headerText="Estado" sortBy="#{busquedaBean.cadenaEstaAbierto(lugar)}">
+                    <h:outputText styleClass="status-#{busquedaBean.cadenaEstaAbierto(lugar).toLowerCase()}"
+                                  value="#{busquedaBean.cadenaEstaAbierto(lugar)}"/>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+
+    </ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xml:lang="en" lang="en">
+<ui:composition template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="detalleLugar.css"/>
+        <h:outputStylesheet library="css" name="mapbox-gl.css"/>
+        <h:outputScript library="js" name="mapbox-gl.js"/>
+        <h:outputScript library="js" name="script_detalle.js"/>
+
+    </ui:define>
+
+    <ui:define name="titulo">Unilocal | lugares denegados</ui:define>
+
+    <ui:define name="contenido">
+        <div class="container">
+            <br></br>
+
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <h:form rendered="#{lugaresModeradorBean.hayLugaresDenegados()}">
+                        <h2>Lugares Denegados</h2>
+                        <p:dataScroller styleClass="listaLugares" value="#{lugaresModeradorBean.lugaresDenegados}" var="lugar"
+                                        chunkSize="10"
+                                        mode="inline"
+
+                        >
+                            <div class="itemList">
+                                <div class="detailsContainer">
+                                    <div class="itemDetails ">
+                                        <h3>#{lugar.nombre}</h3>
+                                        <p>#{lugar.tipo.nombre}</p>
+                                        <p>#{lugar.descripcion}</p>
+                                    </div>
+                                    <p:graphicImage styleClass="imagenLugar "
+                                                    url="/uploads/#{lugar.imagenPrincipal}">
+                                    </p:graphicImage>
+                                </div>
+                                <br></br>
+
+
+                            </div>
+
+                        </p:dataScroller>
+
+                    </h:form>
+
+
+                    <h:form rendered="#{!lugaresModeradorBean.hayLugaresDenegados()}">
+
+                        <div class="card text-white bg-secondary mb-3" style="max-width: 60rem;">
+                            <div class="card-header">#{perfilUsuarioBean.nombre}</div>
+                            <div class="card-body">
+                                <h5 class="card-title">No hay lugares denegados</h5>
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+
+
+            </div>
+        </div>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+    </ui:define>
+</ui:composition>
+</html>

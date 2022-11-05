@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xml:lang="en" lang="en">
+<ui:composition template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="detalleLugar.css"/>
+        <h:outputStylesheet library="css" name="crearLugar.css"/>
+        <h:outputStylesheet library="css" name="mapbox-gl.css"/>
+        <h:outputScript library="js" name="script_lugar.js"/>
+        <h:outputScript library="js" name="mapbox-gl.js"/>
+        <h:outputScript library="js" name="script_detalle.js"/>
+
+    </ui:define>
+
+    <ui:define name="titulo">Unilocal | Perfil</ui:define>
+
+    <ui:define name="contenido">
+        <div class="container">
+            <br></br>
+
+
+            <h:form>
+
+                <p:outputLabel styleClass="fw-bold" for="nombre_usuario" value="Nombre: "/>
+                <p:inputText styleClass="w-100 mb-0" id="nombre_usuario"
+                             value="#{comentariosBean.lugar.nombre}"
+                             required="true"
+                             requiredMessage="El nombre es obligatorio"/>
+
+                <p:message for="nombre_usuario"
+                           style="width: 100% ; margin: 0; border: none;background: none"/>
+
+                <p:outputLabel styleClass="fw-bold" for="nickname_usuario"
+                               value="Descripcion: "/>
+                <p:inputTextarea styleClass="w-100" id="nickname_usuario"
+                                 value="#{comentariosBean.lugar.descripcion}"
+                                 required="true"
+                                 requiredMessage="El nickname es obligatorio"/>
+                <p:message for="nickname_usuario"
+                           style="width: 100%; margin: 0;border: none;background: none"/>
+
+                <p:chips styleClass="w-100 mb-0" id="telefonos_lugar" required="true"
+                         requiredMessage="Ingrese al menos un telefono"
+                         value="#{comentariosBean.lugar.telefonos}"/>
+
+
+
+
+
+                    <div class="card">
+                        <p:dataTable var="horario" id="dt-horarios" widgetVar="dtHorarios" value="#{comentariosBean.lugar.horarios}">
+                            <p:column headerText="Dia">
+                                <h:outputText value="#{horario.dia}" />
+                            </p:column>
+
+                            <p:column headerText="Hora Apertura">
+                                <h:outputText value="#{horario.horaApertura}" />
+                            </p:column>
+
+                            <p:column headerText="Hora cierre">
+                                <h:outputText value="#{horario.horaCierre}" />
+                            </p:column>
+
+                            <p:column headerText="Editar">
+                                <p:commandButton icon="pi pi-pencil"
+                                                 styleClass="rounded-button ui-button-danger ui-button-flat"
+                                                 action="#{comentariosBean.editarHorario}"
+                                                 onclick="PF('Horarios').show()"/>
+
+
+                            </p:column>
+                        </p:dataTable>
+
+                    </div>
+
+                    <br></br>
+
+
+
+
+                <p:dialog header="Horarios" showEffect="fade"
+                          widgetVar="Horarios" modal="true"
+                          styleClass="">
+
+                    <p:outputPanel id="panel" styleClass="d-flex flex-column">
+
+                        <div>
+                            <p:selectOneMenu styleClass="w-100" id="dias"
+                                             value="#{comentariosBean.dia}">
+                                <f:selectItem itemLabel="Seleccione un Dia"
+                                              noSelectionOption="true"/>
+                                <f:selectItems var="dia" itemLabel="#{dia}"
+                                               value="#{lugarBean.dias}"/>
+                            </p:selectOneMenu>
+                        </div>
+
+                        <div>
+                            <p>
+                                Abre
+                                <pe:timePicker
+                                        value="#{comentariosBean.horaApertura}"
+                                        mode="popup"
+                                        widgetVar="popupTimeWidget2"
+                                        label="Popup time picker"
+                                        style="width:100%;"/>
+                            </p>
+                        </div>
+
+                      <h:form>
+                        <div>
+                            <p>
+                                Cierre
+                                <pe:timePicker value="#{comentariosBean.horaCierre}" mode="popup"
+                                               widgetVar="popupTimeWidget"
+                                               label="Popup time picker" style="width:100%;"/>
+                            </p>
+                        </div>
+                      </h:form>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton
+                                styleClass="mt-3 ui-button-raised ui-button-warning fw-bold "
+                                value="Editar"
+                                update="panel,dt-horarios"
+                                process="panel,dt-horarios, @this"
+                                action="#{comentariosBean.editarHorario(horario.id)}">
+                        </p:commandButton>
+                    </f:facet>
+
+                </p:dialog>
+
+                <p:commandButton id="saveDialg" value="Save" icon="pi pi-check"
+                                 action="#{comentariosBean.editarLugar()}"
+                />
+            </h:form>
+
+        </div>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+    </ui:define>
+</ui:composition>
+</html>

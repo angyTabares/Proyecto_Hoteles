@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xml:lang="en" lang="en">
+
+<ui:composition template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="crearLugar.css"/>
+        <h:outputStylesheet library="css" name="formularioRegistro.css"/>
+        <h:outputStylesheet library="css" name="mapbox-gl.css"/>
+        <h:outputScript library="js" name="mapbox-gl.js"/>
+        <h:outputScript library="js" name="script_lugar.js"/>
+    </ui:define>
+    <ui:define name="titulo">Unilocal | Home</ui:define>
+
+    <ui:define name="contenido">
+
+        <div class="w-100 crearLugar">
+            <div class="row">
+                <div class="col mapLugarContainer">
+                    <h3>Selecciona la ubicacion del lugar</h3>
+                    <div id="mapLugar"></div>
+                </div>
+                <div class="col d-flex flex-column ">
+
+                    <h:form id="crear-lugar">
+                        <h:inputHidden id="longitudLugar" value="#{lugarBean.lugar.longitud}"/>
+                        <h:inputHidden id="latidudLugar" value="#{lugarBean.lugar.latitud}"/>
+                        <p:wizard flowListener="#{lugarBean.onFlowProcess}">
+                            <p:tab id="informacionPrincipal" title="Informacion">
+                                <p:panel header="Informacion principal">
+                                    <p:outputLabel styleClass="fw-bold" for="nombre_lugar" value="Nombre: "/>
+                                    <p:inputText styleClass="w-100 mb-0" id="nombre_lugar"
+                                                 value="#{lugarBean.lugar.nombre}"
+                                                 required="true"
+                                                 requiredMessage="El nombre es obligatorio"/>
+                                    <p:message for="nombre_lugar"
+                                               style="width: 100% ; margin: 0; border: none;background: none"/>
+
+                                    <p:outputLabel styleClass="fw-bold" for="ciudad_lugar" value="Ciudad: "/>
+                                    <p:selectOneMenu styleClass="w-100" id="ciudad_lugar"
+                                                     value="#{lugarBean.lugar.ciudadLugar}"
+                                                     required="true"
+                                                     requiredMessage="La ciudad es obligatoria"
+                                                     converter="#{ciudadConverter}"
+
+
+                                                     filterMatchMode="startsWith">
+                                        <f:selectItem itemLabel="Seleccione una Ciudad" noSelectionOption="true"/>
+                                        <f:selectItems var="ciudad" itemLabel="#{ciudad.nombre}"
+                                                       value="#{lugarBean.ciudades}"/>
+                                    </p:selectOneMenu>
+                                    <p:message for="ciudad_lugar"
+                                               style="width: 100%; margin: 0;border: none;background: none"/>
+
+                                    <p:outputLabel styleClass="fw-bold" for="tipo_lugar" value="Tipo lugar: "/>
+                                    <p:selectOneMenu styleClass="w-100 mb-0" id="tipo_lugar"
+                                                     value="#{lugarBean.lugar.tipo}"
+                                                     converter="#{tipoLugarConverter}"
+                                                     required="true"
+                                                     requiredMessage="El tipo de lugar es obligatorio"
+                                                     filter="true"
+                                                     filterMatchMode="startsWith">
+                                        <f:selectItem itemLabel="Seleccione el tipo de lugar" noSelectionOption="true"/>
+                                        <f:selectItems var="tipo" itemLabel="#{tipo.nombre}"
+                                                       value="#{lugarBean.tipoLugares}"/>
+                                    </p:selectOneMenu>
+                                    <p:message for="tipo_lugar"
+                                               style="width: 100%; margin: 0;border: none;background: none"/>
+
+
+                                </p:panel>
+                            </p:tab>
+
+                            <p:tab id="descripcion" title="Descripcion">
+                                <p:panel header="Cuentanos como es el lugar">
+
+                                    <p:outputLabel styleClass="fw-bold" for="descripcion_lugar" value="Descripcion:"/>
+                                    <p:inputTextarea styleClass="w-100 mb-0" id="descripcion_lugar"
+                                                     value="#{lugarBean.lugar.descripcion}"
+                                                     required="true"
+                                                     requiredMessage="La descripcion es obligatoria"/>
+                                    <p:message for="descripcion_lugar"
+                                               style="width: 100%; margin: 0;border: none;background: none"/>
+
+                                    <p:fileUpload listener="#{lugarBean.subirImagenes}" mode="advanced"
+                                                  dragDropSupport="true"
+                                                  multiple="true" update="messages" sizeLimit="1000000" fileLimit="5"
+                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+
+                                    />
+
+                                    <p:growl id="messages" showDetail="true" keepAlive="true"/>
+                                </p:panel>
+                            </p:tab>
+
+                            <p:tab id="contact" title="Contactos y Horarios">
+                                <p:panel header="Donde podemos contactarte y en que momento">
+
+                                    <h:outputText styleClass="fw-bold" for="telefonos_lugar" value="Telefonos "/>
+                                    <p:chips styleClass="w-100 mb-0" id="telefonos_lugar" required="true"
+                                             requiredMessage="Ingrese al menos un telefono"
+                                             value="#{lugarBean.telefonos}"/>
+                                    <p:message for="telefonos_lugar"
+                                               style="width: 100%; margin: 0;border: none;background: none"/>
+
+                                    <h:outputText styleClass="fw-bold" value="Horarios"/>
+
+                                    <p:commandButton icon="pi pi-plus"
+                                                     styleClass="rounded-button ui-button-success ui-button-flat"
+                                                     action="#{lugarBean.nuevoHorario}"
+
+                                                     onclick="PF('Horarios').show()">
+
+                                    </p:commandButton>
+
+                                    <p:dataTable id="dt-products" widgetVar="dtProducts" var="horario"
+                                                 value="#{lugarBean.horarios}"
+                                                 reflow="true" styleClass="products-table"
+                                                 selection="#{lugarBean.horario}"
+                                                 rows="10">
+                                        <p:autoUpdate/>
+                                        <f:facet name="header">
+                                            <div class="products-table-header">
+                                                <span style="font-weight: bold">Horarios</span>
+                                            </div>
+                                        </f:facet>
+
+
+                                        <p:column headerText="Dia"
+                                        >
+                                            <h:outputText value="#{horario.dia}"/>
+                                        </p:column>
+                                        <p:column headerText="Abre"
+                                        >
+                                            <h:outputText
+                                                    value="#{horario.horaApertura}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Cierre"
+                                        >
+                                            <h:outputText value="#{horario.horaCierre}"/>
+                                        </p:column>
+                                        <p:column headerText="Borrar">
+                                            <p:commandButton icon="pi pi-times"
+                                                             styleClass="rounded-button ui-button-danger ui-button-flat"
+                                                             actionListener="#{lugarBean.eliminarHorario}"
+                                                             process="@this"/>
+                                        </p:column>
+
+                                    </p:dataTable>
+
+
+                                    <p:dialog header="Horarios" showEffect="fade"
+                                              widgetVar="Horarios" modal="true"
+                                              styleClass="">
+
+                                        <p:outputPanel id="panel" styleClass="d-flex flex-column">
+
+                                            <div>
+                                                <p:selectOneMenu styleClass="w-100" id="dias"
+                                                                 value="#{lugarBean.horario.dia}">
+                                                    <f:selectItem itemLabel="Seleccione un Dia"
+                                                                  noSelectionOption="true"/>
+                                                    <f:selectItems var="dia" itemLabel="#{dia}"
+                                                                   value="#{lugarBean.dias}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+
+                                            <div>
+                                                <p>
+                                                    Abre
+                                                    <pe:timePicker
+                                                            value="#{lugarBean.horario.horaApertura}"
+                                                            mode="popup"
+                                                            widgetVar="popupTimeWidget2"
+                                                            label="Popup time picker"
+                                                            style="width:100%;"/>
+                                                </p>
+                                            </div>
+
+
+                                            <div>
+                                                <p>
+                                                    Cierre
+                                                    <pe:timePicker value="#{lugarBean.horario.horaCierre}" mode="popup"
+                                                                   widgetVar="popupTimeWidget"
+                                                                   label="Popup time picker" style="width:100%;"/>
+                                                </p>
+                                            </div>
+
+                                        </p:outputPanel>
+                                        <f:facet name="footer">
+                                            <p:commandButton
+                                                    styleClass="mt-3 ui-button-raised ui-button-warning fw-bold "
+                                                    value="Guardar"
+                                                    update="panel,dt-products"
+                                                    process="panel,dt-products, @this"
+                                                    action="#{lugarBean.crearHorario}">
+                                            </p:commandButton>
+                                        </f:facet>
+                                    </p:dialog>
+                                </p:panel>
+                            </p:tab>
+
+                            <p:tab id="confirmacion" title="Confirmacion">
+                                <p:panel header="Confirmacion">
+
+                                    <div class="container">
+                                        <div class="row">
+                                            <p><strong>Nombre: </strong> #{lugarBean.lugar.nombre}</p>
+                                        </div>
+                                        <div class="row">
+                                            <p><strong>Ciudad: </strong> #{lugarBean.lugar.ciudadLugar.nombre}</p>
+                                        </div>
+                                        <div class="row">
+                                            <p><strong>Descripcion: </strong> #{lugarBean.lugar.descripcion}</p>
+                                        </div>
+                                        <div class="row">
+                                            <p><strong>Telefonos: </strong></p>
+                                            <p:repeat value="#{lugarBean.telefonos}" var="tel">
+                                                <p>#{tel}</p>
+                                            </p:repeat>
+                                        </div>
+                                        <div class="mt-4">
+                                            <label class="fs-5">Horarios</label>
+                                            <div class="row">
+                                                <p class="col ms-2 fw-bold"> Dia </p>
+                                                <p class="col ms-2 fw-bold">Abre </p>
+                                                <p class="col ms-2 fw-bold">Cierra</p>
+                                            </div>
+                                            <div class="row">
+
+                                                <p:repeat value="#{lugarBean.horarios}" var="horario">
+                                                    <div class="row">
+                                                        <p class="col text-center">#{horario.dia} </p>
+                                                        <p class="col text-center"> #{horario.horaApertura} </p>
+                                                        <p class="col text-center">#{horario.horaCierre}</p>
+                                                    </div>
+                                                </p:repeat>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                    <p:commandButton styleClass="mt-3 ui-button-raised ui-button-warning fw-bold "
+                                                     value="Crear lugar"
+                                                     action="#{lugarBean.crearLugar}"
+                                                     update="crear-lugar"/>
+
+                                    <p:growl for="mensaje_bean" showDetail="true"/>
+                                </p:panel>
+                            </p:tab>
+                        </p:wizard>
+
+
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+</ui:composition>
+
+</html>

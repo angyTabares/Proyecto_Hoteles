@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xml:lang="en" lang="en">
+<ui:composition template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="detalleLugar.css"/>
+        <h:outputStylesheet library="css" name="mapbox-gl.css"/>
+        <h:outputScript library="js" name="mapbox-gl.js"/>
+        <h:outputScript library="js" name="script_detalle.js"/>
+
+    </ui:define>
+
+    <ui:define name="titulo">Unilocal | Perfil</ui:define>
+
+    <ui:define name="contenido">
+        <div class="container">
+            <br></br>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top" src="/uploads/img.png" alt="Card image cap"/>
+                        <div class="card-body">
+                            <h5 class="card-title">Información Usuario</h5>
+                            <p class="card-text">
+                                <h6 class="card-subtitle mb-2 text-muted"> #{perfilUsuarioBean.nombre}</h6>
+                                <h6 class="card-subtitle mb-2 text-muted"> #{perfilUsuarioBean.nickname}</h6>
+                                <h6 class="card-subtitle mb-2 text-muted"> #{perfilUsuarioBean.email}</h6>
+
+                                <p:commandButton icon="pi pi-pencil"
+                                                 styleClass="edit-button rounded-button ui-button-success"
+                                                 onclick="PF('manageUsuarioDialog').show()">
+                                </p:commandButton>
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-8">
+                    <h:form rendered="#{perfilUsuarioBean.tieneLugares()}">
+
+                        <p:dataScroller styleClass="listaLugares" value="#{perfilUsuarioBean.lugares}" var="lugar"
+                                        chunkSize="10"
+                                        mode="inline"
+                        >
+
+                            <div class="card mb-3" style="max-width: 540px;">
+                                <div class="row g-0">
+                                    <div class="col-md-4 border ">
+                                        <img src="/uploads/#{lugar.imagenPrincipal}"
+                                             class="img-fluid rounded-start w-100 h-100"
+                                             alt="..."></img>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">#{lugar.nombre}</h5>
+                                            <p class="card-text"><small
+                                                    class="text-muted">#{lugar.tipo.nombre}</small></p>
+                                            <h:outputText
+                                                    styleClass="status-#{busquedaBean.cadenaEstaAbierto(lugar).toLowerCase()}"
+                                                    value="#{busquedaBean.cadenaEstaAbierto(lugar)}"/>
+                                            <p class="card-text">#{lugar.descripcion}</p>
+                                            <p class="card-text"><small
+                                                    class="text-muted"></small></p>
+                                            <p:commandButton value="Ver detalle"
+                                                             action="#{inicioBean.irAComentario(lugar.codigo)}"
+                                                             styleClass="ui-button-raised btnVerDetalle"
+                                                             icon="pi pi-arrow-right"
+                                                             iconPos="right"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </p:dataScroller>
+
+                    </h:form>
+
+                    <h:form rendered="#{!perfilUsuarioBean.tieneLugares()}">
+
+                        <div class="card text-white bg-secondary mb-3" style="max-width: 60rem;">
+                            <div class="card-header">#{perfilUsuarioBean.nombre}</div>
+                            <div class="card-body">
+                                <h5 class="card-title">No hay lugares creados</h5>
+                                <p class="card-text">En unilocal puedes agregar tu negocio y darlo a conocer, Animate!</p>
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+
+
+                <h:form>
+                    <p:dialog header="Detalles Usuario" showEffect="fade" modal="true"
+                              widgetVar="manageUsuarioDialog" responsive="true">
+                        <p:outputPanel id="manage-usuario-content" class="ui-fluid">
+                            <p:outputPanel>
+
+                                <p:outputLabel styleClass="fw-bold" for="nombre_usuario" value="Nombre: "/>
+                                <p:inputText styleClass="w-100 mb-0" id="nombre_usuario"
+                                             value="#{perfilUsuarioBean.nombre}"
+                                             required="true"
+                                             requiredMessage="El nombre es obligatorio"/>
+
+                                <p:message for="nombre_usuario"
+                                           style="width: 100% ; margin: 0; border: none;background: none"/>
+
+                                <p:outputLabel styleClass="fw-bold" for="nickname_usuario"
+                                               value="Nickname: "/>
+                                <p:inputText styleClass="w-100" id="nickname_usuario"
+                                             value="#{perfilUsuarioBean.nickname}"
+                                             required="true"
+                                             requiredMessage="El nickname es obligatorio"/>
+                                <p:message for="nickname_usuario"
+                                           style="width: 100%; margin: 0;border: none;background: none"/>
+
+
+                                <p:outputLabel styleClass="fw-bold" for="password_usuario"
+                                               value="Contraseña: "/>
+                                <p:inputText style="width: 100%" id="password_usuario"
+                                             value="#{perfilUsuarioBean.password}"
+                                             required="true"
+                                             requiredMessage="La contraseña es obligatoria"/>
+                                <p:message for="password_usuario"
+                                           style="width: 100%; margin:0;border: none;background: none"/>
+
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <f:facet name="footer">
+
+                            <p:commandButton id="saveDialg" value="Save" icon="pi pi-check"
+                                             action="#{perfilUsuarioBean.editarUsuario()}"
+                            />
+
+                            <p:commandButton value="Cancel" icon="pi pi-times"
+                                             onclick="PF('manageUsuarioDialog').hide()"
+                                             class="ui-button-secondary"/>
+
+
+                        </f:facet>
+                    </p:dialog>
+                </h:form>
+            </div>
+        </div>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+    </ui:define>
+</ui:composition>
+</html>

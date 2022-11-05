@@ -1,0 +1,57 @@
+.card {
+
+    width: 100%;
+    height: 200px;
+}
+
+.reportes {
+    width: 100%;
+    height: 100%;
+}
+
+.reportContainer {
+    box-shadow: inset 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.ui-tabs-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.ui-carousel-item {
+
+    margin-right: 1em !important;
+
+}
+
+.modImgContainer {
+    position: relative;
+    top: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 150px;
+
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 50%;
+
+}
+
+.modImgContainer img {
+    width: 100%;
+    height: 100%;
+}
+
+.modCard {
+    width: 100%;
+    height: 300px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.btnMod {
+    background: red !important;
+    color: #fff !important;
+    border-color: red !important;
+}

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xml:lang="en" lang="en">
+<ui:composition template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="formularioRegistro.css"/>
+    </ui:define>
+    <ui:define name="titulo">Unilocal | Registro</ui:define>
+
+    <ui:define name="contenido">
+
+        <div class="d-flex justify-content-center align-content-center p-4 ">
+
+            <h:form styleClass="d-flex flex-column">
+                <div class="text-center">
+                    <a class="logoFormulario" href="/">Unilocal</a>
+                    <p>Registrate para acceder a lo mejor de Unilocal</p>
+                </div>
+
+                <p:divider align="center">
+                    <div class="p-d-inline-flex p-ai-center">
+                        <i class="pi pi-map-marker fs-4 iconoLogo"></i>
+
+                    </div>
+                </p:divider>
+                <h:panelGrid columns="1">
+
+                    <p:outputLabel styleClass="fw-bold" for="nombre_usuario" value="Nombre: "/>
+                    <p:inputText styleClass="w-100 mb-0" id="nombre_usuario" value="#{usuarioBean.usuario.nombre}"
+                                 required="true"
+                                 requiredMessage="El nombre es obligatorio"/>
+
+                    <p:message for="nombre_usuario" style="width: 100% ; margin: 0; border: none;background: none"/>
+
+                    <p:outputLabel styleClass="fw-bold" for="nickname_usuario"
+                                   value="Nickname: "/>
+                    <p:inputText styleClass="w-100" id="nickname_usuario" value="#{usuarioBean.usuario.nickname}"
+                                 required="true"
+                                 requiredMessage="El nickname es obligatorio"/>
+                    <p:message for="nickname_usuario" style="width: 100%; margin: 0;border: none;background: none"/>
+
+
+                    <p:outputLabel styleClass="fw-bold" for="ciudad_usuario" value="Ciudad: "/>
+                    <p:selectOneMenu styleClass="w-100" id="ciudad_usuario" value="#{usuarioBean.usuario.ciudadUsuario}"
+                                     required="true"
+                                     requiredMessage="La ciudad es obligatoria" converter="#{ciudadConverter}"
+                                     filter="true"
+                                     filterMatchMode="startsWith">
+                        <f:selectItem itemLabel="Seleccione una Ciudad" noSelectionOption="true"/>
+                        <f:selectItems var="ciudad" itemLabel="#{ciudad.nombre}" value="#{usuarioBean.ciudades}"/>
+                    </p:selectOneMenu>
+                    <p:message for="ciudad_usuario" style="width: 100%; margin: 0;border: none;background: none"/>
+
+
+                    <p:outputLabel styleClass="fw-bold" for="email_usuario" value="Email: "/>
+                    <p:inputText styleClass="w-100" id="email_usuario" value="#{usuarioBean.usuario.email}"
+
+                                 required="true"
+                                 requiredMessage="El email es obligatorio"/>
+                    <p:message for="email_usuario" style="width: 100%; margin:0;border: none;background: none"/>
+
+
+                    <p:outputLabel styleClass="fw-bold" for="password_usuario" value="Contraseña: "/>
+                    <p:password style="width: 100%" id="password_usuario" value="#{usuarioBean.usuario.password}"
+                                required="true"
+                                requiredMessage="La contraseña es obligatoria"/>
+                    <p:message for="password_usuario"
+                               style="width: 100%; margin:0;border: none;background: none"/>
+
+
+                </h:panelGrid>
+
+                <p:commandButton styleClass="mt-3 ui-button-raised ui-button-warning fw-bold "
+                                 value="Registrar Usuario"
+                                 action="#{usuarioBean.registrarUsuario}"
+                                 update="@form">
+                    <p:resetInput target="@form"/>
+                </p:commandButton>
+                <p:growl for="mensaje-p" showDetail="true"/>
+            </h:form>
+
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

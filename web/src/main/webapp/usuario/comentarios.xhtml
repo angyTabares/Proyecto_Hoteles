@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xml:lang="en" lang="en">
+<ui:composition template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="detalleLugar.css"/>
+        <h:outputStylesheet library="css" name="mapbox-gl.css"/>
+        <h:outputScript library="js" name="mapbox-gl.js"/>
+        <h:outputScript library="js" name="script_detalle.js"/>
+    </ui:define>
+
+    <ui:define name="titulo">Unilocal | Comentarios</ui:define>
+
+    <ui:define name="contenido">
+
+        <div class="container ">
+            <div class="row detalleNombre ">
+                <h1 class="fs-1"><strong>#{comentariosBean.lugar.nombre}</strong></h1>
+                <p>#{detalleLugarBean.lugar.tipo.nombre}</p>
+            </div>
+            <div class=" row detalleGaleria">
+
+                <div class="col">
+                    <p:galleria styleClass="col w-100" value="#{comentariosBean.lugar.imagenes}" var="image"
+                                showCaption="false">
+                        <p:graphicImage styleClass="w-100 h-100" url="/uploads/#{image}"
+                                        alt="Image Description for #{image}"
+                                        title="#{image}"/>
+                    </p:galleria>
+                </div>
+
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            Información
+                        </div>
+
+                        <div class="card-body">
+                            <p:commandButton icon="pi pi-pencil"
+                                             styleClass="edit-button rounded-button ui-button-warning"
+                                             action="#{inicioBean.irAEDitarLugar(comentariosBean.lugar.codigo)}">
+                            </p:commandButton>
+
+                            <div class="mt-4">
+                                <label class="fs-5"> Descripcion</label>
+                                <p class="ms-2">#{comentariosBean.lugar.descripcion}.</p>
+                            </div>
+                            <div class="mt-4">
+                                <label class="fs-5"> Horarios</label>
+                                <div class="row">
+                                    <p class="col ms-2 fw-bold"> Dia </p>
+                                    <p class="col ms-2 fw-bold">Abre </p>
+                                    <p class="col ms-2 fw-bold">Cierra</p>
+                                </div>
+                                <div class="row">
+
+                                    <p:repeat value="#{comentariosBean.lugar.horarios}" var="horario">
+                                        <div class="row">
+
+                                            <p class=" col ms-2">#{horario.dia} </p>
+                                            <p class="col ms-2"> #{horario.horaApertura} </p>
+                                            <p class="col ms-2">#{horario.horaCierre}</p>
+                                        </div>
+                                    </p:repeat>
+                                </div>
+
+                            </div>
+
+                            <div class="mt-4">
+                                <label class="fs-5"> Telefonos</label>
+                                <p:repeat value="#{comentariosBean.lugar.telefonos}" var="telefono">
+                                    <p class="ms-2">#{telefono}</p>
+                                </p:repeat>
+
+                            </div>
+                            <br/>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br></br>
+
+
+            <h:form id="comentariosF">
+
+                <div class="row mt-4">
+                    <p class="fs-2">Comentarios</p>
+                    <div class="mt-4 comentarios justify-content-center ">
+
+                        <p:repeat value="#{comentariosBean.comentarios}" var="comentario">
+                            <div class="comentario col ">
+                                <div class="d-flex align-items-center align-content-center">
+                                    <div class="d-flex align-items-center">
+                                        <i class="pi pi-user iconoUsuario"></i>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <p>#{comentario.usuarioComentario.nombre}</p>
+                                        <p>#{comentario.fecha}</p>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    #{comentario.comentario}
+                                </div>
+
+
+                                <p:inputText id="respuesta" value="#{comentariosBean.respuesta}"
+                                             placeholder="Respuesta"
+                                             rendered="#{!comentariosBean.hayRespuesta(comentario)}"> </p:inputText>
+                                <br/>
+                                <br/>
+                                <p:commandButton action="#{comentariosBean.responderComentario(comentario)}"
+                                                 rendered="#{!comentariosBean.hayRespuesta(comentario)}"
+                                                 value="Responder" update="@form"/>
+
+
+                                <h:form rendered="#{comentariosBean.hayRespuesta(comentario)}"
+                                        id="respuesta-${comentario.id}">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Respuesta de: #{comentariosBean.lugar.usuario.nickname}
+                                        </div>
+                                        <div class="card-body">
+                                            #{comentario.respuesta}
+                                        </div>
+                                    </div>
+                                </h:form>
+
+                            </div>
+
+
+                        </p:repeat>
+                    </div>
+                </div>
+            </h:form>
+
+
+        </div>
+
+
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+    </ui:define>
+</ui:composition>
+</html>
